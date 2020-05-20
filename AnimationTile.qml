@@ -22,7 +22,7 @@ import qb.components 1.0
 Tile {
 	id: balloonTile
 	property bool dimState: screenStateController.dimmedColors
-	property string baseurl : "https://raw.githubusercontent.com/oepi-loepi/toonanimations/master/"
+	property string baseurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/"
 
 	NewTextLabel {
 		id: clickText
