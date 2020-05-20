@@ -13,6 +13,7 @@ import qb.components 1.0
 
 //		balloonMode("Start",1000,"qrc:/qb/components/Roach.qml","no")
 //		balloonMode("Start",2000,"qrc:/qb/components/Balloon.qml","yes")
+//		onClicked: {balloonMode("Start",10000,"qrc:/qb/components/Santa.qml","no");}
 //		balloonMode("Stop")
 
 Tile {
@@ -39,7 +40,7 @@ Tile {
 
 	NewTextLabel {
 		id: balloonText2
-		width: isNxt ? 140 : 110;  
+		width: (parent.width/3)-2 
 		height: (parent.height/3) -2
 		buttonActiveColor: "lightgrey"
 		buttonHoverColor: "blue"
@@ -52,8 +53,8 @@ Tile {
 			topMargin: 1
 			left: clickText.left
 			}
-		onClicked: {balloonMode("Start",1000,"qrc:/qb/components/Balloon.qml","yes");}
-		//onClicked: {balloonMode("Start",2000,"qrc:/qb/components/Roach.qml","no");}
+		//onClicked: {balloonMode("Start",1000,"qrc:/qb/components/Balloon.qml","yes");}
+		onClicked: {balloonMode("Start",1000,"https://raw.githubusercontent.com/oepi-loepi/RCC-Balloon/master/components/Balloon.qml","yes");}
 
 		visible: !dimState
 	}
@@ -61,7 +62,7 @@ Tile {
 
 	NewTextLabel {
 		id: roachText2
-		width: isNxt ? 140 : 110;  
+		width: (parent.width/3)-2  
 		height: (parent.height/3) -2
 		buttonActiveColor: "lightgrey"
 		buttonHoverColor: "blue"
@@ -74,11 +75,31 @@ Tile {
 			topMargin: 1
 			right: clickText.right 
 			}
-		//onClicked: {balloonMode("Start",1000,"qrc:/qb/components/Balloon.qml","yes");}
-		onClicked: {balloonMode("Start",2000,"qrc:/qb/components/Roach.qml","no");}
+		onClicked: {balloonMode("Start",2000,"https://raw.githubusercontent.com/oepi-loepi/RCC-Roach/master/components/Roach.qml","no");}
 
 		visible: !dimState
 	}
+
+	NewTextLabel {
+		id: santaText2
+		width: (parent.width/3)-2  
+		height: (parent.height/3) -2
+		buttonActiveColor: "lightgrey"
+		buttonHoverColor: "blue"
+		enabled : true
+		textColor : "black"
+		textDisabledColor : "grey"
+		buttonText:  "Santa!"
+		anchors {
+			top: clickText.bottom
+			topMargin: 1
+			horizontalCenter: clickText.horizontalCenter 
+			}
+		onClicked: {balloonMode("Start",10000,"https://raw.githubusercontent.com/oepi-loepi/RCC-Santa/master/components/Santa.qml","yes");}
+
+		visible: !dimState
+	}
+
 
 
 	NewTextLabel {
