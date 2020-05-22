@@ -4,18 +4,19 @@ import qb.components 1.0
 
 
 //	USAGE:
-//		baseurl = "https://raw.githubusercontent.com/oepi-loepi/toonanimations/master/" + "Balloon.qml"
+//		baseurl = "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/" + "Balloon.qml"
 //		must be the raw url to the qml file. Inside the qml file the image must also be raw url (show picture in new tab....)				
 //
-//	function balloonMode(balloonmode, animationtime, animationtype, visibleindimstate) {
+//	function balloonMode(balloonmode, animationtime, animationtype, visibleindimstate, animationDuration) {
 //		animationInterval = interval between new sprites to show
 //		qmlAnimationURL = animationtype by url ( like >>>>    "qrc:/qb/components/Balloon.qml"    <<<<)
 //		balloonmode ="Start" or "Stop" to start and stop the animation (current animation will be finished
 //		visibleindimstate ="yes" or "no" will choose if the animation is visible in the dimstate
+//		animationDuration = maximum time for the animation will last after the start command has finished and no stop command is given (in ms)
 
-//		balloonMode("Start",1000,"qrc:/qb/components/Roach.qml","no")
-//		balloonMode("Start",2000,"qrc:/qb/components/Balloon.qml","yes")
-//		onClicked: {balloonMode("Start",10000,"qrc:/qb/components/Santa.qml","no");}
+//		balloonMode("Start",1000,"qrc:/qb/components/Roach.qml","no",600000)
+//		balloonMode("Start",2000,"qrc:/qb/components/Balloon.qml","yes",600000)
+//		balloonMode("Start",10000,"qrc:/qb/components/Santa.qml","no",600000)
 
 //		balloonMode("Stop")
 
@@ -34,6 +35,7 @@ Tile {
 		textColor : "black"
 		textDisabledColor : "grey"
 		buttonText:  "Animation!"
+		labelFontSize:12
 		anchors {
 			top: parent.top
 			topMargin: 1
@@ -44,7 +46,7 @@ Tile {
 
 	NewTextLabel {
 		id: balloonText2
-		width: (parent.width/3)-2 
+		width: (parent.width/5)-2 
 		height: (parent.height/3) -2
 		buttonActiveColor: "lightgrey"
 		buttonHoverColor: "blue"
@@ -52,13 +54,14 @@ Tile {
 		textColor : "black"
 		textDisabledColor : "grey"
 		buttonText:  "Balloon!"
+		labelFontSize:12
+
 		anchors {
 			top: clickText.bottom
 			topMargin: 1
 			left: clickText.left
 			}
-		//onClicked: {balloonMode("Start",1000,"qrc:/qb/components/Balloon.qml","yes");}
-		onClicked: {balloonMode("Start",1000, baseurl + "Balloon.qml","yes");}
+		onClicked: {balloonMode("Start",1400, baseurl + "Balloon.qml","yes");}
 
 		visible: !dimState
 	}
@@ -66,7 +69,7 @@ Tile {
 
 	NewTextLabel {
 		id: roachText2
-		width: (parent.width/3)-2  
+		width: (parent.width/5)-2  
 		height: (parent.height/3) -2
 		buttonActiveColor: "lightgrey"
 		buttonHoverColor: "blue"
@@ -74,19 +77,22 @@ Tile {
 		textColor : "black"
 		textDisabledColor : "grey"
 		buttonText:  "Roach!"
+		labelFontSize:12
+
 		anchors {
 			top: clickText.bottom
 			topMargin: 1
-			right: clickText.right 
+			left: balloonText2.right
+ 			leftMargin:2
 			}
-		onClicked: {balloonMode("Start",2000, baseurl + "Roach.qml","no");}
+		onClicked: {balloonMode("Start",3000, baseurl + "Roach.qml","no", 600000);}
 
 		visible: !dimState
 	}
 
 	NewTextLabel {
 		id: santaText2
-		width: (parent.width/3)-2  
+		width: (parent.width/5)-2  
 		height: (parent.height/3) -2
 		buttonActiveColor: "lightgrey"
 		buttonHoverColor: "blue"
@@ -94,16 +100,65 @@ Tile {
 		textColor : "black"
 		textDisabledColor : "grey"
 		buttonText:  "Santa!"
+		labelFontSize:12
+
 		anchors {
 			top: clickText.bottom
 			topMargin: 1
-			horizontalCenter: clickText.horizontalCenter 
+			left: roachText2.right
+ 			leftMargin:2
 			}
-		onClicked: {balloonMode("Start",10000, baseurl + "Santa.qml","yes");}
+		onClicked: {balloonMode("Start",10000, baseurl + "Santa.qml","yes", 600000);}
 
 		visible: !dimState
 	}
 
+
+	NewTextLabel {
+		id: snow2
+		width: (parent.width/5)-2  
+		height: (parent.height/3) -2
+		buttonActiveColor: "lightgrey"
+		buttonHoverColor: "blue"
+		enabled : true
+		textColor : "black"
+		textDisabledColor : "grey"
+		buttonText:  "Snow!"
+		labelFontSize:12
+
+		anchors {
+			top: clickText.bottom
+			topMargin: 1
+			left: santaText2.right
+ 			leftMargin:2
+			}
+		onClicked: {balloonMode("Start",10000, baseurl + "Snow.qml","yes", 600000);}
+
+		visible: !dimState
+	}
+
+	NewTextLabel {
+		id: whine2
+		width: (parent.width/5)-2  
+		height: (parent.height/3) -2
+		buttonActiveColor: "lightgrey"
+		buttonHoverColor: "blue"
+		enabled : true
+		textColor : "black"
+		textDisabledColor : "grey"
+		buttonText:  "Whine!"
+		labelFontSize:12
+
+		anchors {
+			top: clickText.bottom
+			topMargin: 1
+			left: snow2.right
+ 			leftMargin:2
+			}
+		onClicked: {balloonMode("Start",3000, baseurl + "Whine.qml","yes", 600000);}
+
+		visible: !dimState
+	}
 
 
 	NewTextLabel {
@@ -116,6 +171,8 @@ Tile {
 		textColor : "black"
 		textDisabledColor : "grey"
 		buttonText:  "Stop!"
+		labelFontSize:12
+
 		anchors {
 			top: balloonText2.bottom
 			topMargin: 1
