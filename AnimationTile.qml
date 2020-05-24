@@ -7,18 +7,17 @@ import qb.components 1.0
 //		baseurl = "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/" + "Balloon.qml"
 //		must be the raw url to the qml file. Inside the qml file the image must also be raw url (show picture in new tab....)				
 //
-//	function balloonMode(balloonmode, animationtime, animationtype, visibleindimstate, animationDuration) {
-//		animationInterval = interval between new sprites to show
-//		qmlAnimationURL = animationtype by url ( like >>>>    "qrc:/qb/components/Balloon.qml"    <<<<)
-//		balloonmode ="Start" or "Stop" to start and stop the animation (current animation will be finished
-//		visibleindimstate ="yes" or "no" will choose if the animation is visible in the dimstate
-//		animationDuration = maximum time for the animation will last after the start command has finished and no stop command is given (in ms)
+//	AnimationScreen(animationRunning, animationtime, animationtype, visibleindimstate, animationDuration) {
+//		animationscreen.animationInterval = interval between new sprites to show
+//		animationscreen.qmlAnimationURL = animationtype by url ( like >>>>    "qrc:/qb/components/Balloon.qml"    <<<<)
+//		animationscreen.animationRunning =true or false to start and stop the animation (current animation will be finished
+//		animationscreen.visibleindimstate =true or falsewill choose if the animation is visible in the dimstate
+//		animationscreen.animationDuration = maximum time for the animation will last after the start command has finished and no stop command is given (in ms)
 
-//		balloonMode("Start",1000,"qrc:/qb/components/Roach.qml","no",600000)
-//		balloonMode("Start",2000,"qrc:/qb/components/Balloon.qml","yes",600000)
-//		balloonMode("Start",10000,"qrc:/qb/components/Santa.qml","no",600000)
-
-//		balloonMode("Stop")
+//		true,1000,"qrc:/qb/components/Roach.qml",true,600000
+//		true,2000,"qrc:/qb/components/Balloon.qml",true,600000
+//		true,10000,"qrc:/qb/components/Santa.qml",false,600000
+//		false,,1000,"qrc:/qb/components/Roach.qml","no",600000
 
 Tile {
 	id: balloonTile
@@ -63,7 +62,12 @@ Tile {
 			leftMargin:2
 
 			}
-		onClicked: {balloonMode("Stop");}
+		onClicked: {
+			animationscreen.animationRunning= false;
+			animationscreen.qmlAnimationURL= baseurl + "Balloon.qml";
+			animationscreen.animationInterval= 1000;
+			animationscreen.isVisibleinDimState= true
+			}
 		visible: !dimState
 	}
 //////////////////////////////////////////////////////////////////////////
@@ -85,8 +89,12 @@ Tile {
 			topMargin: 1
 			left: clickText.left
 			}
-		onClicked: {balloonMode("Start",1400, baseurl + "Balloon.qml","yes");}
-
+		onClicked: {
+			animationscreen.animationRunning= true;
+			animationscreen.qmlAnimationURL= baseurl + "Balloon.qml";
+			animationscreen.animationInterval= 1000;
+			animationscreen.isVisibleinDimState= true
+		}
 		visible: !dimState
 	}
 
@@ -109,8 +117,12 @@ Tile {
 			left: balloonText2.right
  			leftMargin:2
 			}
-		onClicked: {balloonMode("Start",3000, baseurl + "Roach.qml","no", 600000);}
-
+		onClicked: {
+			animationscreen.animationRunning= true;
+			animationscreen.qmlAnimationURL= baseurl + "Roach.qml";
+			animationscreen.animationInterval= 3000;
+			animationscreen.isVisibleinDimState= true
+		}
 		visible: !dimState
 	}
 
@@ -132,8 +144,12 @@ Tile {
 			left: roachText2.right
  			leftMargin:2
 			}
-		onClicked: {balloonMode("Start",10000, baseurl + "Santa.qml","yes", 600000);}
-
+		onClicked: {
+			animationscreen.animationRunning= true;
+			animationscreen.qmlAnimationURL= baseurl + "Santa.qml";
+			animationscreen.animationInterval= 10000;
+			animationscreen.isVisibleinDimState= true
+		}
 		visible: !dimState
 	}
 
@@ -156,8 +172,12 @@ Tile {
 			left: santaText2.right
  			leftMargin:2
 			}
-		onClicked: {balloonMode("Start",10000, baseurl + "Snow.qml","yes", 600000);}
-
+		onClicked: {
+			animationscreen.animationRunning= true;
+			animationscreen.qmlAnimationURL= baseurl + "Snow.qml";
+			animationscreen.animationInterval= 1500;
+			animationscreen.isVisibleinDimState= true
+		}
 		visible: !dimState
 	}
 
@@ -179,8 +199,12 @@ Tile {
 			left: snow2.right
  			leftMargin:2
 			}
-		onClicked: {balloonMode("Start",3000, baseurl + "Whine.qml","yes", 600000);}
-
+		onClicked: {
+			animationscreen.animationRunning= true;
+			animationscreen.qmlAnimationURL= baseurl + "Whine.qml";
+			animationscreen.animationInterval= 2000;
+			animationscreen.isVisibleinDimState= true
+		}
 		visible: !dimState
 	}
 
@@ -202,8 +226,12 @@ Tile {
 			topMargin: 1
 			left: clickText.left
 			}
-		onClicked: {balloonMode("Start",1000, baseurl + "Confetti.qml","yes");}
-
+		onClicked: {
+			animationscreen.animationRunning= true;
+			animationscreen.qmlAnimationURL= baseurl + "Confetti.qml";
+			animationscreen.animationInterval= 1300;
+			animationscreen.isVisibleinDimState= true
+		}
 		visible: !dimState
 	}
 
@@ -226,8 +254,12 @@ Tile {
 			left: confettiText2.right
  			leftMargin:2
 			}
-		onClicked: {balloonMode("Start",5000, baseurl + "Butterfly.qml","no", 600000);}
-
+		onClicked: {
+			animationscreen.animationRunning= true;
+			animationscreen.qmlAnimationURL= baseurl + "Butterfly.qml";
+			animationscreen.animationInterval= 3000;
+			animationscreen.isVisibleinDimState= true
+		}
 		visible: !dimState
 	}
 
@@ -249,8 +281,12 @@ Tile {
 			left: butterflyText2.right
  			leftMargin:2
 			}
-		onClicked: {balloonMode("Start",3000, baseurl + "Roach2.qml","no", 600000);}
-
+		onClicked: {
+			animationscreen.animationRunning= true;
+			animationscreen.qmlAnimationURL= baseurl + "Roach2.qml";
+			animationscreen.animationInterval= 3000;
+			animationscreen.isVisibleinDimState= false
+		}
 		visible: !dimState
 	}
 
@@ -273,8 +309,12 @@ Tile {
 			left: newText2.right
  			leftMargin:2
 			}
-		onClicked: {balloonMode("Start",10000, baseurl + "Snow.qml","yes", 600000);}
-
+		onClicked: {
+			animationscreen.animationRunning= true;
+			animationscreen.qmlAnimationURL= baseurl + "Balloon.qml";
+			animationscreen.animationInterval= 1000;
+			animationscreen.isVisibleinDimState= true
+		}
 		visible: !dimState
 	}
 
@@ -296,8 +336,12 @@ Tile {
 			left: newText3.right
  			leftMargin:2
 			}
-		onClicked: {balloonMode("Start",3000, baseurl + "Whine.qml","yes", 600000);}
-
+		onClicked: {
+			animationscreen.animationRunning= true;
+			animationscreen.qmlAnimationURL= baseurl + "Balloon.qml";
+			animationscreen.animationInterval= 1000;
+			animationscreen.isVisibleinDimState= true
+		}
 		visible: !dimState
 	}
 
