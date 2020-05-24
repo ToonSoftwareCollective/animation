@@ -1,3 +1,6 @@
+1.0.2
+-Roach2 added
+
 1.0.1
 -Snow and Whine added to tile
 
