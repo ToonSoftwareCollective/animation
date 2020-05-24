@@ -10,7 +10,7 @@ App {
 	id: animationApp
 
 	property url tileUrl : "AnimationTile.qml"
-	property url thumbnailIcon: "qrc:/qb/components/BalloonIcon.png"
+	property url thumbnailIcon: "qrc:/tsc/BalloonIcon.png"
 
 	property url animationScreenUrl : "AnimationScreen.qml"
 	property AnimationScreen animationScreen
