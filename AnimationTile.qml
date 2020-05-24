@@ -27,7 +27,7 @@ Tile {
 
 	NewTextLabel {
 		id: clickText
-		width: isNxt ? 284 : 220;  
+		width: isNxt ? 140 : 110;  
 		height: (parent.height/3) -2
 		buttonActiveColor: "lightgrey"
 		buttonHoverColor: "blue"
@@ -39,10 +39,34 @@ Tile {
 		anchors {
 			top: parent.top
 			topMargin: 1
-			horizontalCenter: parent.horizontalCenter 
+			left: parent.left
+			leftMargin:2
 			}
 		visible: !dimState
 	}
+
+	NewTextLabel {
+		id: stopText
+		width: isNxt ? 140 : 110;  
+		height: (parent.height/3) -2
+		buttonActiveColor: "lightgrey"
+		buttonHoverColor: "blue"
+		enabled : true
+		textColor : "black"
+		textDisabledColor : "grey"
+		buttonText:  "Stop!"
+		labelFontSize:12
+		anchors {
+			top: parent.top
+			topMargin: 1
+			left: clickText.right
+			leftMargin:2
+
+			}
+		onClicked: {balloonMode("Stop");}
+		visible: !dimState
+	}
+//////////////////////////////////////////////////////////////////////////
 
 	NewTextLabel {
 		id: balloonText2
@@ -160,27 +184,121 @@ Tile {
 		visible: !dimState
 	}
 
-
+//////////////////////////////////////////////////////////////////
 	NewTextLabel {
-		id: clickText3
-		width: isNxt ? 284 : 220;  
+		id: confettiText2
+		width: (parent.width/5)-2 
 		height: (parent.height/3) -2
 		buttonActiveColor: "lightgrey"
 		buttonHoverColor: "blue"
 		enabled : true
 		textColor : "black"
 		textDisabledColor : "grey"
-		buttonText:  "Stop!"
+		buttonText:  "conf!"
 		labelFontSize:12
 
 		anchors {
-			top: balloonText2.bottom
+			top: whine2.bottom
 			topMargin: 1
-			horizontalCenter: parent.horizontalCenter 
+			left: clickText.left
 			}
-		onClicked: {balloonMode("Stop");}
+		onClicked: {balloonMode("Start",1000, baseurl + "Confetti.qml","yes");}
+
 		visible: !dimState
 	}
 
+
+	NewTextLabel {
+		id: butterflyText2
+		width: (parent.width/5)-2  
+		height: (parent.height/3) -2
+		buttonActiveColor: "lightgrey"
+		buttonHoverColor: "blue"
+		enabled : true
+		textColor : "black"
+		textDisabledColor : "grey"
+		buttonText:  "Buttfly"
+		labelFontSize:12
+
+		anchors {
+			top: whine2.bottom
+			topMargin: 1
+			left: confettiText2.right
+ 			leftMargin:2
+			}
+		onClicked: {balloonMode("Start",5000, baseurl + "Butterfly.qml","no", 600000);}
+
+		visible: !dimState
+	}
+
+	NewTextLabel {
+		id: newText2
+		width: (parent.width/5)-2  
+		height: (parent.height/3) -2
+		buttonActiveColor: "lightgrey"
+		buttonHoverColor: "blue"
+		enabled : true
+		textColor : "black"
+		textDisabledColor : "grey"
+		buttonText:  "Roach2"
+		labelFontSize:12
+
+		anchors {
+			top: whine2.bottom
+			topMargin: 1
+			left: butterflyText2.right
+ 			leftMargin:2
+			}
+		onClicked: {balloonMode("Start",3000, baseurl + "Roach2.qml","no", 600000);}
+
+		visible: !dimState
+	}
+
+
+	NewTextLabel {
+		id: newText3
+		width: (parent.width/5)-2  
+		height: (parent.height/3) -2
+		buttonActiveColor: "lightgrey"
+		buttonHoverColor: "blue"
+		enabled : true
+		textColor : "black"
+		textDisabledColor : "grey"
+		buttonText:  "NA"
+		labelFontSize:12
+
+		anchors {
+			top: whine2.bottom
+			topMargin: 1
+			left: newText2.right
+ 			leftMargin:2
+			}
+		onClicked: {balloonMode("Start",10000, baseurl + "Snow.qml","yes", 600000);}
+
+		visible: !dimState
+	}
+
+	NewTextLabel {
+		id: newText4
+		width: (parent.width/5)-2  
+		height: (parent.height/3) -2
+		buttonActiveColor: "lightgrey"
+		buttonHoverColor: "blue"
+		enabled : true
+		textColor : "black"
+		textDisabledColor : "grey"
+		buttonText:  "NA"
+		labelFontSize:12
+
+		anchors {
+			top: whine2.bottom
+			topMargin: 1
+			left: newText3.right
+ 			leftMargin:2
+			}
+		onClicked: {balloonMode("Start",3000, baseurl + "Whine.qml","yes", 600000);}
+
+		visible: !dimState
+	}
 
 }
