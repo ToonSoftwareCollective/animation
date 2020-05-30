@@ -1,3 +1,6 @@
+1.2.0
+- listview added instead of buttons
+
 1.1.0
 - working with component instead of function
 
@@ -9,4 +12,3 @@
 
 1.0.0
 - First Release:
-

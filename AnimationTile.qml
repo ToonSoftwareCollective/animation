@@ -3,345 +3,225 @@ import BasicUIControls 1.0
 import qb.components 1.0
 
 
-//	USAGE:
-//		baseurl = "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/" + "Balloon.qml"
-//		must be the raw url to the qml file. Inside the qml file the image must also be raw url (show picture in new tab....)				
-//
-//	AnimationScreen(animationRunning, animationtime, animationtype, visibleindimstate, animationDuration) {
 //		animationscreen.animationInterval = interval between new sprites to show
 //		animationscreen.qmlAnimationURL = animationtype by url ( like >>>>    "qrc:/qb/components/Balloon.qml"    <<<<)
 //		animationscreen.animationRunning =true or false to start and stop the animation (current animation will be finished
 //		animationscreen.visibleindimstate =true or falsewill choose if the animation is visible in the dimstate
 //		animationscreen.animationDuration = maximum time for the animation will last after the start command has finished and no stop command is given (in ms)
 
-//		true,1000,"qrc:/qb/components/Roach.qml",true,600000
-//		true,2000,"qrc:/qb/components/Balloon.qml",true,600000
-//		true,10000,"qrc:/qb/components/Santa.qml",false,600000
-//		false,,1000,"qrc:/qb/components/Roach.qml","no",600000
 
 Tile {
 	id: balloonTile
 	property bool dimState: screenStateController.dimmedColors
 	property string baseurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/"
+	property int  numberofItems :0
+
+	Timer {
+		id: loadTimer
+		running: true
+		repeat: true
+		triggeredOnStart: true
+		interval: 86400000
+		onTriggered: {
+			getData()		
+		}
+	}
+
+        function getData() {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange=function() {
+                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                    var obj = JSON.parse(xmlhttp.responseText);
+                    numberofItems =  obj.length
+		    model.clear()
+                    for (var i = 0; i < obj.length; i++){
+                      listview1.model.append({name: obj[i].name})
+                    }
+                }
+            }
+            xmlhttp.open("GET", baseurl + "nameindex.json", true);
+            xmlhttp.send();
+        }
+
+
+
+       function animation(animationName) {
+           var xmlhttp = new XMLHttpRequest();
+	   var url = baseurl +  animationName + ".json"
+           xmlhttp.onreadystatechange=function() {
+               if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+				   var obj = JSON.parse(xmlhttp.responseText);
+				   animationscreen.animationRunning= true;
+				   animationscreen.qmlAnimationURL= obj.component;
+				   if (isNxt) {
+						animationscreen.animationInterval= obj.Toon2time
+					}
+					else{
+					animationscreen.animationInterval= obj.Toon1time
+					}
+				   if (obj.visibleindimstate==="yes"){animationscreen.isVisibleinDimState= true}
+				   if (obj.visibleindimstate==="no"){animationscreen.isVisibleinDimState= false}
+				}
+           }
+           xmlhttp.open("GET", url, true);
+           xmlhttp.send();
+       }
 
 	NewTextLabel {
-		id: clickText
-		width: isNxt ? 140 : 110;  
-		height: (parent.height/3) -2
+		id: startText
+		width: isNxt ? 120 : 96;  
+		height: isNxt ? 35 : 28
 		buttonActiveColor: "lightgrey"
 		buttonHoverColor: "blue"
 		enabled : true
 		textColor : "black"
-		textDisabledColor : "grey"
-		buttonText:  "Animation!"
-		labelFontSize:12
+		buttonText:  "Start"
 		anchors {
 			top: parent.top
 			topMargin: 1
 			left: parent.left
 			leftMargin:2
 			}
+		onClicked: {
+			animation(model.get(listview1.currentIndex).name);
+		}
 		visible: !dimState
 	}
 
 	NewTextLabel {
 		id: stopText
-		width: isNxt ? 140 : 110;  
-		height: (parent.height/3) -2
+		width: isNxt ? 120 : 96;  
+		height: isNxt ? 35 : 30
 		buttonActiveColor: "lightgrey"
 		buttonHoverColor: "blue"
 		enabled : true
 		textColor : "black"
 		textDisabledColor : "grey"
 		buttonText:  "Stop!"
-		labelFontSize:12
 		anchors {
-			top: parent.top
+			top: startText.top
 			topMargin: 1
-			left: clickText.right
+			left: startText.right
 			leftMargin:2
 
-			}
+		}
 		onClicked: {
 			animationscreen.animationRunning= false;
-			animationscreen.qmlAnimationURL= baseurl + "Balloon.qml";
-			animationscreen.animationInterval= 1000;
-			animationscreen.isVisibleinDimState= true
-			}
-		visible: !dimState
-	}
-//////////////////////////////////////////////////////////////////////////
-
-	NewTextLabel {
-		id: balloonText2
-		width: (parent.width/5)-2 
-		height: (parent.height/3) -2
-		buttonActiveColor: "lightgrey"
-		buttonHoverColor: "blue"
-		enabled : true
-		textColor : "black"
-		textDisabledColor : "grey"
-		buttonText:  "Balloon!"
-		labelFontSize:12
-
-		anchors {
-			top: clickText.bottom
-			topMargin: 1
-			left: clickText.left
-			}
-		onClicked: {
-			animationscreen.animationRunning= true;
-			animationscreen.qmlAnimationURL= baseurl + "Balloon.qml";
-			animationscreen.animationInterval= 1000;
-			animationscreen.isVisibleinDimState= true
+			animationscreen.isVisibleinDimState= false;
 		}
 		visible: !dimState
 	}
 
-
-	NewTextLabel {
-		id: roachText2
-		width: (parent.width/5)-2  
-		height: (parent.height/3) -2
-		buttonActiveColor: "lightgrey"
-		buttonHoverColor: "blue"
-		enabled : true
-		textColor : "black"
-		textDisabledColor : "grey"
-		buttonText:  "Roach!"
-		labelFontSize:12
-
+/////////////////////////////////////////////////////////////////////////
+	Rectangle{
+		width: isNxt ? 240 : 188
+		height: isNxt ? 145 : 116
+		color: "white"
+		radius: isNxt ? 5 : 4
+		border.color: "black"
+			border.width: isNxt ? 5 : 4
 		anchors {
-			top: clickText.bottom
-			topMargin: 1
-			left: balloonText2.right
- 			leftMargin:2
+			bottom: downButton.bottom
+			left:   startText.left
+		}
+
+		Component {
+			id: aniDelegate
+			Item {
+				width: isNxt ? (parent.width-20) : (parent.width-16)
+				height: 22
+				Text {
+					id: tst
+					 text: name
+				font.pixelSize: isNxt ? 22 : 17
+				font.family: labelTitle.font.family
+				}
 			}
-		onClicked: {
-			animationscreen.animationRunning= true;
-			animationscreen.qmlAnimationURL= baseurl + "Roach.qml";
-			animationscreen.animationInterval= 3000;
-			animationscreen.isVisibleinDimState= true
+		}
+
+		ListModel {
+				id: model
+		}
+
+
+		ListView {
+			id: listview1
+			anchors {
+				top: parent.top
+				topMargin:isNxt ? 20 : 16
+				leftMargin: isNxt ? 12 : 9
+				left: parent.left
+			}
+			width: parent.width
+			height: isNxt ? (parent.height-50) : (parent.height-40)
+			model:model
+			delegate: aniDelegate
+			highlight: Rectangle { 
+				color: "lightsteelblue"; 
+				radius: isNxt ? 5 : 4
+			}
+			focus: true
+			MouseArea {
+				anchors.fill: parent
+				onClicked: {
+				animation(model.get(listview1.currentIndex).name);
+				}
+			}
 		}
 		visible: !dimState
 	}
 
-	NewTextLabel {
-		id: santaText2
-		width: (parent.width/5)-2  
-		height: (parent.height/3) -2
-		buttonActiveColor: "lightgrey"
-		buttonHoverColor: "blue"
-		enabled : true
-		textColor : "black"
-		textDisabledColor : "grey"
-		buttonText:  "Santa!"
-		labelFontSize:12
+/////////////////////////////////////////////////////////////////////////
 
+	IconButton {
+		id: upButton
 		anchors {
-			top: clickText.bottom
-			topMargin: 1
-			left: roachText2.right
- 			leftMargin:2
-			}
-		onClicked: {
-			animationscreen.animationRunning= true;
-			animationscreen.qmlAnimationURL= baseurl + "Santa.qml";
-			animationscreen.animationInterval= 10000;
-			animationscreen.isVisibleinDimState= true
+			bottom: refreshButton.top
+			bottomMargin: isNxt ? 5 : 4
+			right:  parent.right
+			rightMargin : 3
 		}
+
+		iconSource: "qrc:/tsc/up.png"
+		onClicked: {
+		    if (listview1.currentIndex>0){
+                        listview1.currentIndex  = listview1.currentIndex -1;
+            }
+		}	
 		visible: !dimState
 	}
 
 
-	NewTextLabel {
-		id: snow2
-		width: (parent.width/5)-2  
-		height: (parent.height/3) -2
-		buttonActiveColor: "lightgrey"
-		buttonHoverColor: "blue"
-		enabled : true
-		textColor : "black"
-		textDisabledColor : "grey"
-		buttonText:  "Snow!"
-		labelFontSize:12
-
+	IconButton {
+		id: refreshButton
 		anchors {
-			top: clickText.bottom
-			topMargin: 1
-			left: santaText2.right
- 			leftMargin:2
+			bottom: downButton.top
+			bottomMargin: isNxt ? 5 : 4
+			left:   upButton.left
 			}
+
+		iconSource: "qrc:/tsc/refresh.png"
 		onClicked: {
-			animationscreen.animationRunning= true;
-			animationscreen.qmlAnimationURL= baseurl + "Snow.qml";
-			animationscreen.animationInterval= 1500;
-			animationscreen.isVisibleinDimState= true
-		}
-		visible: !dimState
-	}
-
-	NewTextLabel {
-		id: whine2
-		width: (parent.width/5)-2  
-		height: (parent.height/3) -2
-		buttonActiveColor: "lightgrey"
-		buttonHoverColor: "blue"
-		enabled : true
-		textColor : "black"
-		textDisabledColor : "grey"
-		buttonText:  "Whine!"
-		labelFontSize:12
-
-		anchors {
-			top: clickText.bottom
-			topMargin: 1
-			left: snow2.right
- 			leftMargin:2
-			}
-		onClicked: {
-			animationscreen.animationRunning= true;
-			animationscreen.qmlAnimationURL= baseurl + "Whine.qml";
-			animationscreen.animationInterval= 2000;
-			animationscreen.isVisibleinDimState= true
-		}
-		visible: !dimState
-	}
-
-//////////////////////////////////////////////////////////////////
-	NewTextLabel {
-		id: confettiText2
-		width: (parent.width/5)-2 
-		height: (parent.height/3) -2
-		buttonActiveColor: "lightgrey"
-		buttonHoverColor: "blue"
-		enabled : true
-		textColor : "black"
-		textDisabledColor : "grey"
-		buttonText:  "conf!"
-		labelFontSize:12
-
-		anchors {
-			top: whine2.bottom
-			topMargin: 1
-			left: clickText.left
-			}
-		onClicked: {
-			animationscreen.animationRunning= true;
-			animationscreen.qmlAnimationURL= baseurl + "Confetti.qml";
-			animationscreen.animationInterval= 1300;
-			animationscreen.isVisibleinDimState= true
-		}
+			getData()
+		}	
 		visible: !dimState
 	}
 
 
-	NewTextLabel {
-		id: butterflyText2
-		width: (parent.width/5)-2  
-		height: (parent.height/3) -2
-		buttonActiveColor: "lightgrey"
-		buttonHoverColor: "blue"
-		enabled : true
-		textColor : "black"
-		textDisabledColor : "grey"
-		buttonText:  "Buttfly"
-		labelFontSize:12
-
+	IconButton {
+		id: downButton
 		anchors {
-			top: whine2.bottom
-			topMargin: 1
-			left: confettiText2.right
- 			leftMargin:2
-			}
-		onClicked: {
-			animationscreen.animationRunning= true;
-			animationscreen.qmlAnimationURL= baseurl + "Butterfly.qml";
-			animationscreen.animationInterval= 3000;
-			animationscreen.isVisibleinDimState= true
+			bottom: parent.bottom
+			bottomMargin: isNxt ? 5 : 4
+			left:   upButton.left
 		}
-		visible: !dimState
-	}
 
-	NewTextLabel {
-		id: newText2
-		width: (parent.width/5)-2  
-		height: (parent.height/3) -2
-		buttonActiveColor: "lightgrey"
-		buttonHoverColor: "blue"
-		enabled : true
-		textColor : "black"
-		textDisabledColor : "grey"
-		buttonText:  "Roach2"
-		labelFontSize:12
-
-		anchors {
-			top: whine2.bottom
-			topMargin: 1
-			left: butterflyText2.right
- 			leftMargin:2
-			}
+		iconSource: "qrc:/tsc/down.png"
 		onClicked: {
-			animationscreen.animationRunning= true;
-			animationscreen.qmlAnimationURL= baseurl + "Roach2.qml";
-			animationscreen.animationInterval= 3000;
-			animationscreen.isVisibleinDimState= false
-		}
-		visible: !dimState
-	}
-
-
-	NewTextLabel {
-		id: newText3
-		width: (parent.width/5)-2  
-		height: (parent.height/3) -2
-		buttonActiveColor: "lightgrey"
-		buttonHoverColor: "blue"
-		enabled : true
-		textColor : "black"
-		textDisabledColor : "grey"
-		buttonText:  "NA"
-		labelFontSize:12
-
-		anchors {
-			top: whine2.bottom
-			topMargin: 1
-			left: newText2.right
- 			leftMargin:2
-			}
-		onClicked: {
-			animationscreen.animationRunning= true;
-			animationscreen.qmlAnimationURL= baseurl + "Balloon.qml";
-			animationscreen.animationInterval= 1000;
-			animationscreen.isVisibleinDimState= true
-		}
-		visible: !dimState
-	}
-
-	NewTextLabel {
-		id: newText4
-		width: (parent.width/5)-2  
-		height: (parent.height/3) -2
-		buttonActiveColor: "lightgrey"
-		buttonHoverColor: "blue"
-		enabled : true
-		textColor : "black"
-		textDisabledColor : "grey"
-		buttonText:  "NA"
-		labelFontSize:12
-
-		anchors {
-			top: whine2.bottom
-			topMargin: 1
-			left: newText3.right
- 			leftMargin:2
-			}
-		onClicked: {
-			animationscreen.animationRunning= true;
-			animationscreen.qmlAnimationURL= baseurl + "Balloon.qml";
-			animationscreen.animationInterval= 1000;
-			animationscreen.isVisibleinDimState= true
-		}
+		    if (numberofItems>=listview1.currentIndex){
+                        listview1.currentIndex  = listview1.currentIndex +1;
+            }
+		}	
 		visible: !dimState
 	}
 
