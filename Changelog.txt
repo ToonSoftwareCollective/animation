@@ -1,3 +1,6 @@
+1.2.1
+- location of app icon moved to tsc folder
+
 1.2.0
 - listview added instead of buttons
 
