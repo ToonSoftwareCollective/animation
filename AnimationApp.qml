@@ -10,15 +10,10 @@ App {
 	id: animationApp
 
 	property url tileUrl : "AnimationTile.qml"
-	property url thumbnailIcon: "qrc:/qb/components/BalloonIcon.png"
-
-	//property url animation2ScreenUrl : "Animation2Screen.qml"
-	//property Animation2Screen animation2Screen
+	property url thumbnailIcon: "qrc:/tsc/BalloonIcon.png"
 
 	function init() {
 		registry.registerWidget("tile", tileUrl, this, null, {thumbLabel: qsTr("Animation!"), thumbIcon: thumbnailIcon, thumbCategory: "general", thumbWeight: 30, baseTileWeight: 10, thumbIconVAlignment: "center"});
-		//registry.registerWidget("screen", animation2ScreenUrl, this, "animation2Screen");
-
 	}
 
 }
