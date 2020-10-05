@@ -1,5 +1,5 @@
 //
-// Animation! v1.0.0 by Oepi-Loepi
+// Animation! v1.2.1 by Oepi-Loepi
 //
 
 import QtQuick 2.1
