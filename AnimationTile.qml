@@ -14,8 +14,11 @@ Tile {
 	id: balloonTile
 	property bool dimState: screenStateController.dimmedColors
 	property string baseurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/"
+	property string triggerurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/trigger/triggerfile"
 	property int  numberofItems :0
+	property bool triggerfileactionreceived : false
 
+	//every day the list on the tile will be filled again	
 	Timer {
 		id: loadTimer
 		running: true
@@ -26,50 +29,108 @@ Tile {
 			getData()		
 		}
 	}
+	
+	//every 5 minutes the trigger file will be checked if action is needed
+	Timer {
+		id: animationcheckTimer
+		running: app.optIN
+		repeat: true
+		triggeredOnStart: true
+		interval: 300000
+		onTriggered: {
+			checkforAnimation();
+		}
+	}
 
-        function getData() {
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange=function() {
-                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                    var obj = JSON.parse(xmlhttp.responseText);
-                    numberofItems =  obj.length
-		    model.clear()
-                    for (var i = 0; i < obj.length; i++){
-                      listview1.model.append({name: obj[i].name})
-                    }
-                }
-            }
-            xmlhttp.open("GET", baseurl + "nameindex.json", true);
-            xmlhttp.send();
-        }
+	//when a trigger from the trigger file is received, hold checking the trigger file for 12 minutes to give some time for the trigger file operator
+	Timer {
+		id: animationholdTimer
+		running: triggerfileactionreceived
+		repeat: false
+		triggeredOnStart: false
+		interval: 360000
+		onTriggered: {
+			triggerfileactionreceived = false;
+		}
+	}
 
 
+	function checkforAnimation() {
+		if (app.optIN & !triggerfileactionreceived){
+			try {
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange=function() {
+					if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+						if (xmlhttp.status == 200) {
+								var JsonString = xmlhttp.responseText;
+									var JsonObject= JSON.parse(JsonString);
 
-       function animation(animationName) {
-           var xmlhttp = new XMLHttpRequest();
-	   var url = baseurl +  animationName + ".json"
-           xmlhttp.onreadystatechange=function() {
-               if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-				   var obj = JSON.parse(xmlhttp.responseText);
-				   animationscreen.animationRunning= true;
-				   animationscreen.qmlAnimationURL= obj.component;
-				   if (isNxt) {
-						animationscreen.animationInterval= obj.Toon2time
+								var animationmode = JsonObject['animationmode'];
+								var animationtype = JsonObject['animationtype'];
+		
+								if (animationmode  == 'Start') {
+									animation(animationtype);
+									triggerfileactionreceived = true;							
+								}
+								if (animationmode  == 'Stop') {
+									animationscreen.animationRunning= false;
+									animationscreen.isVisibleinDimState= false;
+									triggerfileactionreceived = true;
+								}
+						}
 					}
-					else{
-					animationscreen.animationInterval= obj.Toon1time
-					}
-				   if (obj.visibleindimstate==="yes"){animationscreen.isVisibleinDimState= true}
-				   if (obj.visibleindimstate==="no"){animationscreen.isVisibleinDimState= false}
 				}
-           }
-           xmlhttp.open("GET", url, true);
-           xmlhttp.send();
-       }
+				xmlhttp.open("GET", triggerurl);
+				xmlhttp.send();
+			} catch(e) {
+			}
+		}
+	}
+
+
+	function getData() {
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange=function() {
+			if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+				var obj = JSON.parse(xmlhttp.responseText);
+				numberofItems =  obj.length
+		model.clear()
+				for (var i = 0; i < obj.length; i++){
+				  listview1.model.append({name: obj[i].name})
+				}
+			}
+		}
+		xmlhttp.open("GET", baseurl + "nameindex.json", true);
+		xmlhttp.send();
+	}
+
+
+
+	function animation(animationName) {
+	var xmlhttp = new XMLHttpRequest();
+	var url = baseurl +  animationName + ".json"
+	   xmlhttp.onreadystatechange=function() {
+		   if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+			   var obj = JSON.parse(xmlhttp.responseText);
+			   animationscreen.animationRunning= true;
+			   animationscreen.qmlAnimationURL= obj.component;
+			   if (isNxt) {
+					animationscreen.animationInterval= obj.Toon2time
+				}
+				else{
+				animationscreen.animationInterval= obj.Toon1time
+				}
+			   if (obj.visibleindimstate==="yes"){animationscreen.isVisibleinDimState= true}
+			   if (obj.visibleindimstate==="no"){animationscreen.isVisibleinDimState= false}
+			}
+	   }
+	   xmlhttp.open("GET", url, true);
+	   xmlhttp.send();
+	}
 
 	NewTextLabel {
 		id: startText
-		width: isNxt ? 120 : 96;  
+		width: isNxt ? 95 : 65;  
 		height: isNxt ? 35 : 28
 		buttonActiveColor: "lightgrey"
 		buttonHoverColor: "blue"
@@ -90,7 +151,7 @@ Tile {
 
 	NewTextLabel {
 		id: stopText
-		width: isNxt ? 120 : 96;  
+		width: isNxt ? 95 : 65;  
 		height: isNxt ? 35 : 30
 		buttonActiveColor: "lightgrey"
 		buttonHoverColor: "blue"
@@ -111,6 +172,31 @@ Tile {
 		}
 		visible: !dimState
 	}
+
+	NewTextLabel {
+		id: configText
+		width: isNxt ? 95 : 65;  
+		height: isNxt ? 35 : 30
+		buttonActiveColor: "lightgrey"
+		buttonHoverColor: "blue"
+		enabled : true
+		textColor : "black"
+		textDisabledColor : "grey"
+		buttonText:  "Setup"
+		anchors {
+			top: startText.top
+			topMargin: 1
+			left: stopText.right
+			leftMargin:2
+
+			}
+		onClicked: {stage.openFullscreen(app.animationConfigScreenUrl)}		
+		visible: !dimState
+	}
+
+
+
+
 
 /////////////////////////////////////////////////////////////////////////
 	Rectangle{
@@ -134,7 +220,7 @@ Tile {
 					id: tst
 					 text: name
 				font.pixelSize: isNxt ? 22 : 17
-				font.family: labelTitle.font.family
+				//font.family: labelTitle.font.family
 				}
 			}
 		}

@@ -1,3 +1,9 @@
+1.2.3
+- minor change
+
+1.2.2
+- remote triggerfile added and config screen for opt-in
+
 1.2.1
 - location of app icon moved to tsc folder
 
