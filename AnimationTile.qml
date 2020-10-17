@@ -131,7 +131,7 @@ Tile {
 	NewTextLabel {
 		id: startText
 		width: isNxt ? 95 : 65;  
-		height: isNxt ? 35 : 28
+		height: isNxt ? 35 : 30
 		buttonActiveColor: "lightgrey"
 		buttonHoverColor: "blue"
 		enabled : true
