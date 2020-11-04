@@ -3,15 +3,17 @@ import BasicUIControls 1.0
 import qb.components 1.0
 
 
-//		animationscreen.animationInterval = interval between new sprites to show
-//		animationscreen.qmlAnimationURL = animationtype by url ( like >>>>    "qrc:/qb/components/Balloon.qml"    <<<<)
-//		animationscreen.animationRunning =true or false to start and stop the animation (current animation will be finished
-//		animationscreen.visibleindimstate =true or falsewill choose if the animation is visible in the dimstate
-//		animationscreen.animationDuration = maximum time for the animation will last after the start command has finished and no stop command is given (in ms)
+//  animationscreen.animationInterval = interval between new sprites to show
+//  animationscreen.qmlAnimationURL = animationtype by url ( like >>>>    "Balloon.qml"    <<<<)
+//  animationscreen.staticImageT1  =  static picture as background for Toon1 (800x480 pixels. Transparent PNG, ( like >>>> "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/sint_T1.png" <<<<)
+//  animationscreen.staticImageT2  =  static picture as background for Toon2 (1024x600 pixels. Transparent PNG, ( like >>>> "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/sint_T2.png" <<<<)
+//  animationscreen.animationRunning =true or false to start and stop the animation (current animation will be finished
+//  animationscreen.visibleindimstate =true or falsewill choose if the animation is visible in the dimstate
+//  animationscreen.animationDuration = maximum time for the animation will last after the start command has finished and no stop command is given (in ms)
 
 
 Tile {
-	id: balloonTile
+	id: animationTile
 	property bool dimState: screenStateController.dimmedColors
 	property string baseurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/"
 	property string triggerurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/trigger/triggerfile"
@@ -65,9 +67,9 @@ Tile {
 								var JsonString = xmlhttp.responseText;
 									var JsonObject= JSON.parse(JsonString);
 
-								var animationmode = JsonObject['animationmode'];
-								var animationtype = JsonObject['animationtype'];
-		
+									var animationmode = JsonObject['animationmode'];
+									var animationtype = JsonObject['animationtype'];
+									
 								if (animationmode  == 'Start') {
 									animation(animationtype);
 									triggerfileactionreceived = true;							
@@ -114,14 +116,21 @@ Tile {
 			   var obj = JSON.parse(xmlhttp.responseText);
 			   animationscreen.animationRunning= true;
 			   animationscreen.qmlAnimationURL= obj.component;
+
 			   if (isNxt) {
 					animationscreen.animationInterval= obj.Toon2time
 				}
 				else{
-				animationscreen.animationInterval= obj.Toon1time
+					animationscreen.animationInterval= obj.Toon1time
 				}
 			   if (obj.visibleindimstate==="yes"){animationscreen.isVisibleinDimState= true}
 			   if (obj.visibleindimstate==="no"){animationscreen.isVisibleinDimState= false}
+
+		           try {
+			   	animationscreen.staticImageT1 = obj.staticImageT1
+			   	animationscreen.staticImageT2 = obj.staticImageT2
+			   } catch(e) {
+			   }
 			}
 	   }
 	   xmlhttp.open("GET", url, true);
@@ -131,7 +140,7 @@ Tile {
 	NewTextLabel {
 		id: startText
 		width: isNxt ? 95 : 65;  
-		height: isNxt ? 35 : 28
+		height: isNxt ? 35 : 30
 		buttonActiveColor: "lightgrey"
 		buttonHoverColor: "blue"
 		enabled : true

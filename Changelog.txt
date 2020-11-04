@@ -1,3 +1,6 @@
+1.2.4
+- static images added to overlay
+
 1.2.3
 - minor change
 
