@@ -16,10 +16,14 @@ App {
 	property url animationConfigScreenUrl : "AnimationConfigScreen.qml"
 	property bool optIN : false
 	property string tmpOPTIN : "No"
+	property string appURLString : "https://github.com/ToonSoftwareCollective/toonanimations"
 
 	property variant animationSettingsJson : {
 		'tmpOPTIN': ""
 	}
+
+	property string githubMode : ""
+
 
 
 	FileIO {
@@ -34,9 +38,9 @@ App {
 	}
 
 	Component.onCompleted: {
+		getGithubMode()
 		try {
 			animationSettingsJson = JSON.parse(animationSettingsFile.read());
-			
 			if (animationSettingsJson['tmpOPTIN'] == "Yes") {
 				optIN= true
 			} else {
@@ -46,6 +50,35 @@ App {
 		} catch(e) {
 		}
 	}
+	
+	function getGithubMode() {
+		if (githubMode.length <1){
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange=function() {
+				if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+					githubMode = "master"
+					console.log("Githubmode is : " + githubMode )
+				}
+			}
+		}
+		xmlhttp.open("GET", appURLString + "/blob/master/version.txt", true);
+		xmlhttp.send();
+		
+		if (githubMode.length <1){
+			var xmlhttp2 = new XMLHttpRequest();
+			xmlhttp2.onreadystatechange=function() {
+				if (xmlhttp2.readyState === 4 && xmlhttp2.status === 200) {
+					githubMode = "main"
+					console.log("Githubmode is : " + githubMode )
+				}
+			}
+			xmlhttp2.open("GET", appURLString + "/blob/main/version.txt", true);
+			xmlhttp2.send();
+		}
+	}
+	
+	
+
 
 	function saveSettings() {
 		if (optIN == true) {

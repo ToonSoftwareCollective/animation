@@ -15,11 +15,22 @@ import qb.components 1.0
 Tile {
 	id: animationTile
 	property bool dimState: screenStateController.dimmedColors
-	property string baseurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/"
-	property string triggerurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/trigger/triggerfile"
+	property string baseurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/"+ app.githubMode +   "/"
+	property string triggerurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/"+ app.githubMode +   "/trigger/triggerfile"
 	property int  numberofItems :0
 	property bool triggerfileactionreceived : false
 
+	//every day the list on the tile will be filled again	
+	Timer {
+		id: firstloadTimer
+		running: true
+		repeat: false
+		triggeredOnStart: true
+		interval: 10000
+		onTriggered: {
+			getData()		
+		}
+	}
 	//every day the list on the tile will be filled again	
 	Timer {
 		id: loadTimer
