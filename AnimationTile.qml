@@ -7,19 +7,35 @@ import qb.components 1.0
 //  animationscreen.qmlAnimationURL = animationtype by url ( like >>>>    "Balloon.qml"    <<<<)
 //  animationscreen.staticImageT1  =  static picture as background for Toon1 (800x480 pixels. Transparent PNG, ( like >>>> "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/sint_T1.png" <<<<)
 //  animationscreen.staticImageT2  =  static picture as background for Toon2 (1024x600 pixels. Transparent PNG, ( like >>>> "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/sint_T2.png" <<<<)
+//  animationscreen.staticImageT1dim  =  static picture as background for Toon1 (800x480 pixels. Transparent PNG, ( like >>>> "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/sint_dim_T1.png" <<<<)
+//  animationscreen.staticImageT2dim  =  static picture as background for Toon2 (1024x600 pixels. Transparent PNG, ( like >>>> "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/sint_dim_T2.png" <<<<)
 //  animationscreen.animationRunning =true or false to start and stop the animation (current animation will be finished
-//  animationscreen.visibleindimstate =true or falsewill choose if the animation is visible in the dimstate
+//  animationscreen.visibleindimstate =true or falsewill choose if the animation is visible in the dimstate 
 //  animationscreen.animationDuration = maximum time for the animation will last after the start command has finished and no stop command is given (in ms)
+
+//  hideLogo = true or false will hide the Toon logo
 
 
 Tile {
 	id: animationTile
 	property bool dimState: screenStateController.dimmedColors
-	property string baseurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/"
-	property string triggerurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/master/trigger/triggerfile"
+	property string baseurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/"+ app.githubMode +   "/"
+	property string triggerurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/"+ app.githubMode +   "/trigger/triggerfile"
 	property int  numberofItems :0
 	property bool triggerfileactionreceived : false
 
+
+	//every day the list on the tile will be filled again	
+	Timer {
+		id: firstloadTimer
+		running: true
+		repeat: false
+		triggeredOnStart: true
+		interval: 10000
+		onTriggered: {
+			getData()		
+		}
+	}
 	//every day the list on the tile will be filled again	
 	Timer {
 		id: loadTimer
@@ -78,6 +94,7 @@ Tile {
 									animationscreen.animationRunning= false;
 									animationscreen.isVisibleinDimState= false;
 									triggerfileactionreceived = true;
+									if (stage.logo) stage.logo.visible = (globals.tsc["hideToonLogo"] !== 2 )
 								}
 						}
 					}
@@ -111,12 +128,14 @@ Tile {
 	function animation(animationName) {
 	var xmlhttp = new XMLHttpRequest();
 	var url = baseurl +  animationName + ".json"
+	   //console.log( "stage.logo.visible :" + globals.tsc["hideToonLogo"])
+	   if (stage.logo) stage.logo.visible = (globals.tsc["hideToonLogo"] !== 2 )
 	   xmlhttp.onreadystatechange=function() {
 		   if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 			   var obj = JSON.parse(xmlhttp.responseText);
 			   animationscreen.animationRunning= true;
 			   animationscreen.qmlAnimationURL= obj.component;
-
+			   
 			   if (isNxt) {
 					animationscreen.animationInterval= obj.Toon2time
 				}
@@ -125,12 +144,27 @@ Tile {
 				}
 			   if (obj.visibleindimstate==="yes"){animationscreen.isVisibleinDimState= true}
 			   if (obj.visibleindimstate==="no"){animationscreen.isVisibleinDimState= false}
-
-		           try {
-			   	animationscreen.staticImageT1 = obj.staticImageT1
-			   	animationscreen.staticImageT2 = obj.staticImageT2
+			   
+			   try {
+					var hideLogo = obj.hideLogo
+					if (hideLogo  == 'true') {
+						if (stage.logo) stage.logo.visible = 0	
+					}
 			   } catch(e) {
 			   }
+
+		       try {
+					animationscreen.staticImageT1 = obj.staticImageT1
+					animationscreen.staticImageT2 = obj.staticImageT2
+			   } catch(e) {
+			   }
+
+			   try {
+			   	animationscreen.staticImageT1dim = obj.staticImageT1dim
+			   	animationscreen.staticImageT2dim = obj.staticImageT2dim
+			   } catch(e) {
+			   }
+
 			}
 	   }
 	   xmlhttp.open("GET", url, true);
@@ -178,6 +212,7 @@ Tile {
 		onClicked: {
 			animationscreen.animationRunning= false;
 			animationscreen.isVisibleinDimState= false;
+			if (stage.logo) stage.logo.visible = (globals.tsc["hideToonLogo"] !== 2 )
 		}
 		visible: !dimState
 	}
