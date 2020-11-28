@@ -1,3 +1,10 @@
+1.2.6
+- hide toon logo added
+- static overlay dimmed added
+
+1.2.5
+- github change to main added
+
 1.2.4
 - static images added to overlay
 
