@@ -1,3 +1,6 @@
+1.2.7
+- all to github main
+
 1.2.6
 - hide toon logo added
 - static overlay dimmed added

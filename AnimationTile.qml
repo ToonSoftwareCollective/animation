@@ -19,8 +19,8 @@ import qb.components 1.0
 Tile {
 	id: animationTile
 	property bool dimState: screenStateController.dimmedColors
-	property string baseurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/"+ app.githubMode +   "/"
-	property string triggerurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/"+ app.githubMode +   "/trigger/triggerfile"
+	property string baseurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/main/"
+	property string triggerurl : "https://raw.githubusercontent.com/ToonSoftwareCollective/toonanimations/main/trigger/triggerfile"
 	property int  numberofItems :0
 	property bool triggerfileactionreceived : false
 
